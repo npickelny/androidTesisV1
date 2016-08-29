@@ -1,6 +1,6 @@
 package com.example.tesis;
 
-import java.sql.Date;
+import java.util.Date;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnKeyListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -20,16 +19,19 @@ public class MainActivity extends Activity {
 	public int cont;
 	public EditText myEditText1;
 	public String mKeyString;
-
+	public double[][] matrix;
+	public Date date;
+	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		cont = 0;	
+		date  = new Date();
 		
 		myEditText1 = (EditText)findViewById(R.id.editText1);	
 		myEditText1.addTextChangedListener(generalTextWatcher);
-		
 	}
 			
 	private TextWatcher generalTextWatcher = new TextWatcher() {    
@@ -40,7 +42,7 @@ public class MainActivity extends Activity {
 	    	
 	        char currentChar = s.charAt(before); // currently typed character
 	        Log.d("test:",currentChar+" ESTE CHARACTER");
-	        Log.d("test",String.valueOf(System.currentTimeMillis()/1000));
+	        Log.d("TimeA",String.valueOf(date.getTime()));
         
 
 	    }
@@ -49,6 +51,7 @@ public class MainActivity extends Activity {
 	    public void beforeTextChanged(CharSequence s, int start, int count,int after) {
 	    	mKeyString = s.toString ();
 	    	Log.d("test:",mKeyString + " beforeTextChanged");
+	    	Log.d("TimeB",String.valueOf(date.getTime()));
 
 	    	
 	    }

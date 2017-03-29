@@ -1,0 +1,95 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/keyboard_view"
+            android:background="#ffffff">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:weightSum="1">
+                    <!--Content of the ScrollView-->
+
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="192dp"
+                        android:weightSum="2">
+
+                        <ListView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/listViewTecla"
+                            android:layout_weight="1"/>
+
+                        <ListView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/listViewAire"
+                            android:layout_weight="1"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/before_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="10dp"
+                        android:textSize="15dp"
+                        android:text="Escriba aca la siguiente frase:"
+                        android:textColor="@color/primary_text"
+                        android:textStyle="bold"
+                        android:gravity="center_horizontal"/>
+                    <TextView
+                        android:id="@+id/textToWrite"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textSize="17dp"
+                        android:textColor="@color/colorAccent"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/before_input"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:inputType="textMultiLine" />
+                </LinearLayout>
+
+            <android.inputmethodservice.KeyboardView
+                android:id="@+id/keyboard_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_above="@+id/relativeAd"
+                android:layout_centerHorizontal="true"
+                android:focusable="true"
+                android:background="@color/background"
+                android:keyBackground="@color/background"
+                android:focusableInTouchMode="true"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/relativeAd"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@color/divider"
+                android:gravity="center"
+                android:orientation="vertical">
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</merge>

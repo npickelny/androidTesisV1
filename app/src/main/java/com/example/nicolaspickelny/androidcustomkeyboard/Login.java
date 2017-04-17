@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -17,11 +16,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.HashMap;
 
-import Extra.FontsOverride;
-import Interfaces.ServerInterface;
+import Network.ServerInterface;
 import restClases.HealthCheck;
 import restClases.User;
 import retrofit2.Call;
@@ -29,7 +26,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class Login extends AppCompatActivity {
@@ -57,7 +53,7 @@ public class Login extends AppCompatActivity {
         Retrofit retrofit = new Retrofit.Builder()
                 //.baseUrl("http://192.168.0.11:3000")//"http://portal.axiomexergy.com/")
 //                .baseUrl("http://portal.axiomexergy.com")
-                .baseUrl("http://192.168.0.16:3000")
+                .baseUrl("http://192.168.0.12:3000")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
@@ -69,9 +65,15 @@ public class Login extends AppCompatActivity {
         String name = etUserMail.getText().toString();
         String email = etUserMail.getText().toString();
 
+        final HashMap<String, String> params = new HashMap<>(2);
+        params.put("username", name);
+        params.put("email", email);
+
+        final Context context = this;
+
         Log.d("GAGA","PASO");
-        Call<HealthCheck> hcCall = instance.getHealth();
-        //Call<User> loginCall = instance.login(name);
+        //Call<HealthCheck> hcCall = instance.getHealth();
+        Call<User> loginCall = instance.login(params);
 
 //        hcCall.enqueue(new Callback<HealthCheck>() {
 //            @Override
@@ -86,29 +88,29 @@ public class Login extends AppCompatActivity {
 //            }
 //        });
 
-//        loginCall.enqueue(new Callback<User>() {
-//            @Override
-//            public void onResponse(Call<User> call, Response<User> response) {
-//                User usr = response.body();
-//
-//                if (usr == null) {
-//                    Toast.makeText(getApplicationContext(), "The email provided is not recognized", Toast.LENGTH_SHORT);
-//                }
-//
-//                Intent i = new Intent(getApplicationContext(), MainActivity.class);
-////                i.putExtra("userEmail", email);
-//                startActivity(i);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<User> call, Throwable t) {
-//
-//            }
-//        });
+        loginCall.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                User usr = response.body();
 
-        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-        i.putExtra("userEmail", email);
-        startActivity(i);
+                if (usr == null) {
+                    Toast.makeText(getApplicationContext(), "The email provided is not recognized", Toast.LENGTH_SHORT);
+                }
+
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+//                i.putExtra("userEmail", email);
+                startActivity(i);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+
+            }
+        });
+
+//        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+//        i.putExtra("userEmail", email);
+//        startActivity(i);
     }
 
     private boolean validateUser(String email) {
@@ -120,41 +122,11 @@ public class Login extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.example.nicolaspickelny.androidcustomkeyboard/http/host/path")
-        );
-        AppIndex.AppIndexApi.start(client, viewAction);
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        Action viewAction = Action.newAction(
-                Action.TYPE_VIEW, // TODO: choose an action type.
-                "Login Page", // TODO: Define a title for the content shown.
-                // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
-                Uri.parse("http://host/path"),
-                // TODO: Make sure this auto-generated app URL is correct.
-                Uri.parse("android-app://com.example.nicolaspickelny.androidcustomkeyboard/http/host/path")
-        );
-        AppIndex.AppIndexApi.end(client, viewAction);
-        client.disconnect();
     }
 
     @Override

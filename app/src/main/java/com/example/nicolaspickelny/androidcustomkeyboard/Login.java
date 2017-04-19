@@ -7,12 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -31,11 +29,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class Login extends AppCompatActivity {
 
     private EditText etUserMail;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+    private CheckBox checkBox;
     private ServerInterface instance;
 
     @Override
@@ -43,8 +37,6 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         getSupportActionBar().hide();
-
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
         /***********************************************************************
          *********************** RETROFIT REST CLIENT **************************
@@ -61,6 +53,20 @@ public class Login extends AppCompatActivity {
     }
 
     public void loginStep1(View view) {
+        final Context context = this;
+
+        checkBox = (CheckBox) findViewById(R.id.checkBox1);
+
+        if(!checkBox.isChecked()){
+            Toast.makeText(context, "Server ByPassed", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(Login.this, MainActivity.class);
+            startActivity(i);
+            return;
+        }
+
+        Toast.makeText(context, "Validating against Server", Toast.LENGTH_SHORT).show();
+
+
         etUserMail = (EditText) findViewById(R.id.etEmail);
         String name = etUserMail.getText().toString();
         String email = etUserMail.getText().toString();
@@ -69,7 +75,6 @@ public class Login extends AppCompatActivity {
         params.put("username", name);
         params.put("email", email);
 
-        final Context context = this;
 
         Log.d("GAGA","PASO");
         //Call<HealthCheck> hcCall = instance.getHealth();
@@ -94,7 +99,7 @@ public class Login extends AppCompatActivity {
                 User usr = response.body();
 
                 if (usr == null) {
-                    Toast.makeText(getApplicationContext(), "The email provided is not recognized", Toast.LENGTH_SHORT);
+                    Toast.makeText(context, "The email provided is not recognized", Toast.LENGTH_SHORT).show();
                 }
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -104,13 +109,9 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-
+                Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//        i.putExtra("userEmail", email);
-//        startActivity(i);
     }
 
     private boolean validateUser(String email) {

@@ -3,6 +3,7 @@ package Network;
 import java.util.HashMap;
 
 import restClases.HealthCheck;
+import restClases.ResponseCode;
 import restClases.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -24,6 +25,9 @@ public interface ServerInterface {
 
     @POST("/api/user/login")
     Call<User> login(@Body HashMap<String,String> body);
+
+    @POST("/api/user/postData")
+    Call<ResponseCode> postData(@Body HashMap<String,String> body);
 }
 
 

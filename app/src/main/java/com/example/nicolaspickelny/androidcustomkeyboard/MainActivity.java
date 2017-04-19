@@ -1,6 +1,8 @@
 package com.example.nicolaspickelny.androidcustomkeyboard;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -14,14 +16,28 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Random;
+
+import Network.RetrofitAPIService;
+import Network.ServerInterface;
+import restClases.ResponseCode;
+import restClases.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private int primarykeyguardada;
     private Long sueltoTecla;
     private HashMap<Integer, String> hmap;
+    private Button btnSignIn;
+
+    private CheckBox checkBox;
 
     protected ListView lvAire, lvTecla;
     protected ArrayList<String> alAire,alTecla;
@@ -54,8 +73,60 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         getSupportActionBar().hide();
 
+        final Context context = this;
+
         beforeTitle = (TextView) findViewById(R.id.before_label);
         eTexto = (EditText) findViewById(R.id.before_input);
+
+        btnSignIn = (Button) findViewById(R.id.btnPasar);
+        btnSignIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            checkBox = (CheckBox) findViewById(R.id.checkBox);
+            if(!checkBox.isChecked()){
+                Toast.makeText(getApplicationContext(), "Server ByPassed", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(MainActivity.this, ShowArrays.class);
+                i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
+                startActivity(i);
+                return;
+            }
+            ServerInterface retrofit = RetrofitAPIService.getInstance();
+
+            final HashMap<String, String> params = new HashMap<>(2);
+            Gson gson = new Gson();
+
+            String keyPressArrayJSON = gson.toJson(keyPressArray);
+            String keyAirArrayJSON = gson.toJson(keyAirArray);
+
+            params.put("keyPressArray", keyPressArrayJSON);
+            params.put("keyAirArray", keyAirArrayJSON);
+
+            Call<ResponseCode> sendDataCall = retrofit.postData(params);
+
+            sendDataCall.enqueue(new Callback<ResponseCode>() {
+                @Override
+                public void onResponse(Call<ResponseCode> call, Response<ResponseCode> response) {
+                    ResponseCode responseCode = response.body();
+
+                    Intent i = new Intent(MainActivity.this, ShowArrays.class);
+                    if(responseCode.getResultCode() == 1){ //TODO change code and set it in cofing file
+                        i.putExtra("name", "NICO HARCODED");
+                    } else {
+                        i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
+                    }
+                    startActivity(i);
+                }
+
+                @Override
+                public void onFailure(Call<ResponseCode> call, Throwable t) {
+                    Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            }
+        });
+
 
         this.setRandomPhrase();
         this.loadLetterTransformer();
@@ -121,9 +192,9 @@ public class MainActivity extends AppCompatActivity {
             if(primero != false) {
                 Date onpress = new Date();
                 tiempoDiferenciaEntreTeclas = onpress.getTime() - sueltoTecla;
-                Log.d("TestAire","TestAire: tecla "+hmap.get(primarykeyguardada-29) +" "+hmap.get(primaryCode-29)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+                Log.d("TestAire","TestAire: tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
 
-                alAire.add("tecla "+hmap.get(primarykeyguardada-29) +" "+hmap.get(primaryCode-29)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+                alAire.add("tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
 
                 keyAirArray[primarykeyguardada-29][primaryCode-29].addValue(tiempoDiferenciaEntreTeclas);
 
@@ -143,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
             primarykeyguardada=primaryCode;
             sueltoTecla = dOneKeyRelease.getTime();
             tiempoPresionDeTecla = dOneKeyRelease.getTime()- dOneKeyPress.getTime();
-            Log.d("TestTecla","TestTecla: tecla "+hmap.get(primaryCode-29)+" -- "+ String.valueOf(tiempoPresionDeTecla));
+            Log.d("TestTecla","TestTecla: tecla "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoPresionDeTecla));
 
 
             alTecla.add("tecla "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoPresionDeTecla));

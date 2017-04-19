@@ -1,10 +1,12 @@
 package com.example.nicolaspickelny.androidcustomkeyboard;
 
+import java.io.Serializable;
+
 /**
  * Created by Nico on 22/02/2017.
  */
 
-public class LetterItem {
+public class LetterItem implements Serializable{
     private int count;
     private long total;
 

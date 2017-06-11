@@ -24,6 +24,5 @@ public class ShowArrays extends AppCompatActivity {
 
         tvName = (TextView) findViewById(R.id.tvName);
         tvName.setText(getIntent().getStringExtra("name"));
-        tvName.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
 }

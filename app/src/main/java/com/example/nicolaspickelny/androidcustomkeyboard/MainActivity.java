@@ -26,20 +26,22 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import Network.RetrofitAPIService;
 import Network.ServerInterface;
 import restClases.ResponseCode;
-import restClases.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
+
+    private String TAG = MainActivity.class.getSimpleName();
 
     private EditText eTexto;
     private TextView beforeTitle;
@@ -58,14 +60,18 @@ public class MainActivity extends AppCompatActivity {
     private HashMap<Integer, String> hmap;
     private Button btnSignIn;
 
+    private int codeAux;
+
     private CheckBox checkBox;
 
     protected ListView lvAire, lvTecla;
     protected ArrayList<String> alAire,alTecla;
     protected ArrayAdapter<String> listAdapterAire, listAdapterTecla;
 
-    protected LetterItem[] keyPressArray = new LetterItem[26];
-    protected LetterItem[][] keyAirArray = new LetterItem[26][26];
+//    protected LetterItem[] keyPressArray = new LetterItem[27];
+    protected LetterItem[] keyPressArray = new LetterItem[34];
+//    protected LetterItem[][] keyAirArray = new LetterItem[27][27];
+    protected LetterItem[][] keyAirArray = new LetterItem[34][34];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +108,9 @@ public class MainActivity extends AppCompatActivity {
             params.put("keyPressArray", keyPressArrayJSON);
             params.put("keyAirArray", keyAirArrayJSON);
 
-            Call<ResponseCode> sendDataCall = retrofit.postData(params);
+            Log.d(TAG, params.toString());
+
+            Call<ResponseCode> sendDataCall = retrofit.sendData(params);
 
             sendDataCall.enqueue(new Callback<ResponseCode>() {
                 @Override
@@ -110,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     ResponseCode responseCode = response.body();
 
                     Intent i = new Intent(MainActivity.this, ShowArrays.class);
-                    if(responseCode.getResultCode() == 1){ //TODO change code and set it in cofing file
+                    if(responseCode.getResultCode() == 10){ //TODO change code and set it in cofing file
                         i.putExtra("name", "NICO HARCODED");
                     } else {
                         i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
@@ -161,16 +169,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void inicializarArray(LetterItem[][] keyAirArray) {
-        for(int i=0; i<26; i++){
-            for(int j=0; j<26; j++){
+        for(int i=0; i<34; i++){
+            for(int j=0; j<34; j++){
                 keyAirArray[i][j] = new LetterItem();
+                keyAirArray[i][j].setLetra1(hmap.get(i+29));
+                keyAirArray[i][j].setLetra2(hmap.get(j+29));
             }
         }
     }
 
     private void inicializarArray(LetterItem[] keyPressArray) {
-        for(int j=0; j<26; j++){
+        for(int j=0; j<34; j++){
             keyPressArray[j] = new LetterItem();
+            keyPressArray[j].setLetra1(hmap.get(j+29));
         }
     }
 
@@ -342,5 +353,6 @@ public class MainActivity extends AppCompatActivity {
         hmap.put(52,"x");
         hmap.put(53,"y");
         hmap.put(54,"z");
+        hmap.put(62,"espacio");
     }
 }

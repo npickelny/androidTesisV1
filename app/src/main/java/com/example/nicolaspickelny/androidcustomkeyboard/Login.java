@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.HashMap;
 
+import Network.RetrofitAPIService;
 import Network.ServerInterface;
 import restClases.HealthCheck;
 import restClases.User;
@@ -41,15 +42,15 @@ public class Login extends AppCompatActivity {
         /***********************************************************************
          *********************** RETROFIT REST CLIENT **************************
          ***********************************************************************/
-        Gson gson = new GsonBuilder().create();
-        Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("http://192.168.0.11:3000")//"http://portal.axiomexergy.com/")
-//                .baseUrl("http://portal.axiomexergy.com")
-                .baseUrl("http://192.168.0.12:3000")
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-
-        instance = retrofit.create(ServerInterface.class);
+//        Gson gson = new GsonBuilder().create();
+//        Retrofit retrofit = new Retrofit.Builder()
+//                //.baseUrl("http://192.168.0.11:3000")//"http://portal.axiomexergy.com/")
+////                .baseUrl("http://portal.axiomexergy.com")
+//                .baseUrl("http://192.168.0.12:3000")
+//                .addConverterFactory(GsonConverterFactory.create(gson))
+//                .build();
+//
+//        instance = retrofit.create(ServerInterface.class);
     }
 
     public void loginStep1(View view) {
@@ -76,9 +77,11 @@ public class Login extends AppCompatActivity {
         params.put("email", email);
 
 
+
         Log.d("GAGA","PASO");
         //Call<HealthCheck> hcCall = instance.getHealth();
-        Call<User> loginCall = instance.login(params);
+
+        Call<User> loginCall = RetrofitAPIService.getInstance().login(params);
 
 //        hcCall.enqueue(new Callback<HealthCheck>() {
 //            @Override

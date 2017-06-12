@@ -27,24 +27,7 @@
                         android:id="@+id/checkBox" />
 
 
-                    <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="192dp"
-                        android:weightSum="2">
 
-                        <ListView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/listViewTecla"
-                            android:layout_weight="1"/>
-
-                        <ListView
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:id="@+id/listViewAire"
-                            android:layout_weight="1"/>
-                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/before_label"
@@ -81,6 +64,25 @@
                         android:layout_height="wrap_content"
                         android:id="@+id/btnPasar" />
 
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="192dp"
+                        android:weightSum="2">
+
+                        <ListView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/listViewTecla"
+                            android:layout_weight="1"/>
+
+                        <ListView
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:id="@+id/listViewAire"
+                            android:layout_weight="1"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 

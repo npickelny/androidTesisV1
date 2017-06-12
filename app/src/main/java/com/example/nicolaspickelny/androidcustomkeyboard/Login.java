@@ -1,14 +1,22 @@
 package com.example.nicolaspickelny.androidcustomkeyboard;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -33,27 +41,50 @@ public class Login extends AppCompatActivity {
     private CheckBox checkBox;
     private ServerInterface instance;
 
+    private Button btnLogin;
+    private TextView etSignUp;
+    private ProgressDialog progressDialog = null;
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        getSupportActionBar().hide();
 
-        /***********************************************************************
-         *********************** RETROFIT REST CLIENT **************************
-         ***********************************************************************/
-//        Gson gson = new GsonBuilder().create();
-//        Retrofit retrofit = new Retrofit.Builder()
-//                //.baseUrl("http://192.168.0.11:3000")//"http://portal.axiomexergy.com/")
-////                .baseUrl("http://portal.axiomexergy.com")
-//                .baseUrl("http://192.168.0.12:3000")
-//                .addConverterFactory(GsonConverterFactory.create(gson))
-//                .build();
-//
-//        instance = retrofit.create(ServerInterface.class);
+
+
+        btnLogin = (Button) findViewById(R.id.butLogin);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showProgresPopUp();
+                loginStep1();
+            }
+        });
+
+
+        etSignUp = (TextView) findViewById(R.id.link_signup);
+        etSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Login.this, SignUp.class);
+                startActivity(i);
+            }
+        });
     }
 
-    public void loginStep1(View view) {
+    private void showProgresPopUp() {
+
+        progressDialog = new ProgressDialog(Login.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
+    }
+
+    public void loginStep1() {
         final Context context = this;
 
         checkBox = (CheckBox) findViewById(R.id.checkBox1);
@@ -66,7 +97,6 @@ public class Login extends AppCompatActivity {
         }
 
         Toast.makeText(context, "Validating against Server", Toast.LENGTH_SHORT).show();
-
 
         etUserMail = (EditText) findViewById(R.id.etEmail);
         String name = etUserMail.getText().toString();
@@ -83,24 +113,12 @@ public class Login extends AppCompatActivity {
 
         Call<User> loginCall = RetrofitAPIService.getInstance().login(params);
 
-//        hcCall.enqueue(new Callback<HealthCheck>() {
-//            @Override
-//            public void onResponse(Call<HealthCheck> call, Response<HealthCheck> response) {
-//                HealthCheck hc = response.body();
-////                Log.d("RESPUESTA", hc.getApp().getVersion());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<HealthCheck> call, Throwable t) {
-//
-//            }
-//        });
-
         loginCall.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
-                User usr = response.body();
+                progressDialog.dismiss();
 
+                User usr = response.body();
                 if (usr == null) {
                     Toast.makeText(context, "The email provided is not recognized", Toast.LENGTH_SHORT).show();
                 }
@@ -112,6 +130,8 @@ public class Login extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
+                progressDialog.dismiss();
+
                 Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
             }
         });

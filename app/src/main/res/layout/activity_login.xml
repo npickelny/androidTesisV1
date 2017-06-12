@@ -11,6 +11,16 @@
     android:background="@color/background"
     tools:context="com.example.nicolaspickelny.androidcustomkeyboard.Login">
 
+    <CheckBox
+        android:text="Server Validation?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/checkBox1" />
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,56 +34,83 @@
         android:textSize="30sp" />
 
 
+    <!--<EditText-->
+        <!--android:layout_width="250dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/etEmail"-->
+        <!--android:layout_marginTop="38dp"-->
+        <!--android:hint="Enter your Email"-->
+        <!--android:textColorHint="@color/icons"-->
+        <!--android:textColor="@color/icons"-->
+        <!--android:background="@drawable/roundshape"-->
+        <!--android:layout_below="@+id/textView"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:inputType="textEmailAddress"-->
+    <!--/>-->
+
+    <!-- Email Label -->
+
+
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/etEmail"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/textView"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
+        android:theme="@style/TextLabel">
+
+        <EditText android:id="@+id/Email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Enter your Email" />
+    </android.support.design.widget.TextInputLayout>
+
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Next"
+        android:id="@+id/butLogin"
         android:background="@drawable/rectanglebuttonshape"
         android:textColor="@color/icons"
-        android:id="@+id/butLogin"
-        android:onClick="loginStep1"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/etEmail"
-        android:layout_alignLeft="@+id/etEmail"
-        android:layout_alignStart="@+id/etEmail"
-        android:layout_alignRight="@+id/etEmail"
-        android:layout_alignEnd="@+id/etEmail"
         android:shadowColor="#000000"
         android:shadowDx="1.2"
         android:shadowDy="1.2"
         android:shadowRadius="1.5"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_alignLeft="@+id/etEmail"
+        android:layout_alignRight="@+id/etEmail"
+        android:layout_below="@+id/etEmail"/>
 
-    <EditText
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/etEmail"
-        android:layout_marginTop="38dp"
-        android:hint="Enter your Email"
-        android:textColorHint="@color/icons"
-        android:textColor="@color/icons"
-        android:background="@drawable/roundshape"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:inputType="textEmailAddress"
-    />
 
     <ImageView
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         app:srcCompat="@drawable/splashid"
         android:id="@+id/imageView2"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
-
-    <CheckBox
-        android:text="Server Validation?"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:layout_alignParentTop="true"
+        android:scaleType="fitCenter"
         android:layout_centerHorizontal="true"
-        android:id="@+id/checkBox1" />
+        android:layout_centerVertical="true"
+        android:layout_marginTop="22dp"
+        android:layout_below="@+id/butLogin"/>
+
+    <TextView android:id="@+id/link_signup"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="No account yet? Create one"
+        android:gravity="center"
+        android:textSize="16dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+
+
 
 
 </RelativeLayout>

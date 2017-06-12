@@ -6,28 +6,32 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:name="Extra.AppFont"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="SecureBanking"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:name="com.example.nicolaspickelny.androidcustomkeyboard.MainActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".Login">
+        <activity android:name="com.example.nicolaspickelny.androidcustomkeyboard.Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ShowArrays"></activity>
+
+        <activity android:name="com.example.nicolaspickelny.androidcustomkeyboard.ShowArrays"></activity>
+
+        <activity android:name="com.example.nicolaspickelny.androidcustomkeyboard.SignUp"></activity>
     </application>
 
 </manifest>

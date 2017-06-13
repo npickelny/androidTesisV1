@@ -1,4 +1,4 @@
-package com.example.nicolaspickelny.androidcustomkeyboard;
+package com.example.nicolaspickelny.androidcustomkeyboard.Activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -23,13 +23,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nicolaspickelny.androidcustomkeyboard.LetterItem;
+import com.example.nicolaspickelny.androidcustomkeyboard.R;
+import com.example.nicolaspickelny.androidcustomkeyboard.ShowArrays;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import Network.RetrofitAPIService;

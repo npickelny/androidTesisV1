@@ -1,41 +1,31 @@
-package com.example.nicolaspickelny.androidcustomkeyboard;
+package com.example.nicolaspickelny.androidcustomkeyboard.Activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.example.nicolaspickelny.androidcustomkeyboard.R;
 
 import java.util.HashMap;
 
 import Network.RetrofitAPIService;
 import Network.ServerInterface;
-import restClases.HealthCheck;
 import restClases.User;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private EditText etUserMail;
     private CheckBox checkBox;
@@ -69,7 +59,7 @@ public class Login extends AppCompatActivity {
         etSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(Login.this, SignUp.class);
+                Intent i = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(i);
             }
         });
@@ -77,7 +67,7 @@ public class Login extends AppCompatActivity {
 
     private void showProgresPopUp() {
 
-        progressDialog = new ProgressDialog(Login.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
@@ -85,31 +75,23 @@ public class Login extends AppCompatActivity {
     }
 
     public void loginStep1() {
-        final Context context = this;
 
         checkBox = (CheckBox) findViewById(R.id.checkBox1);
 
         if(!checkBox.isChecked()){
-            Toast.makeText(context, "Server ByPassed", Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(Login.this, MainActivity.class);
+            showCustomSnackBar("Server ByPassed");
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
             return;
         }
 
-        Toast.makeText(context, "Validating against Server", Toast.LENGTH_SHORT).show();
+        showCustomSnackBar("Validating against Server");
 
-        etUserMail = (EditText) findViewById(R.id.etEmail);
-        String name = etUserMail.getText().toString();
+        etUserMail = (EditText) findViewById(R.id.Email);
         String email = etUserMail.getText().toString();
 
         final HashMap<String, String> params = new HashMap<>(2);
-        params.put("username", name);
         params.put("email", email);
-
-
-
-        Log.d("GAGA","PASO");
-        //Call<HealthCheck> hcCall = instance.getHealth();
 
         Call<User> loginCall = RetrofitAPIService.getInstance().login(params);
 
@@ -120,7 +102,7 @@ public class Login extends AppCompatActivity {
 
                 User usr = response.body();
                 if (usr == null) {
-                    Toast.makeText(context, "The email provided is not recognized", Toast.LENGTH_SHORT).show();
+                    showCustomSnackBar("The email provided is not recognized");
                 }
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -131,15 +113,17 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 progressDialog.dismiss();
-
-                Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
+                showCustomSnackBar("Server Error");
             }
         });
     }
 
-    private boolean validateUser(String email) {
-        return true;
 
+    private void showCustomSnackBar(String msg){
+        Snackbar snack = Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG);
+        View snackView = snack.getView();
+        snackView.setBackgroundColor(ContextCompat.getColor(LoginActivity.this, R.color.GREY));
+        snack.show();
     }
 
 

@@ -35,9 +35,6 @@ public class LoginActivity extends AppCompatActivity {
     private TextView etSignUp;
     private ProgressDialog progressDialog = null;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -1,5 +1,6 @@
 package com.example.nicolaspickelny.androidcustomkeyboard.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,12 @@ import com.example.nicolaspickelny.androidcustomkeyboard.R;
 
 import java.util.HashMap;
 
+import Network.RetrofitAPIService;
+import restClases.User;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private Button btn_signup;
@@ -24,11 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText input_lastName;
     private EditText input_name;
 
-
-    private LinearLayout mainLayout;
-    private PopupWindow popUpWindow;
-    private LayoutInflater layoutInflater;
-    private RelativeLayout relativeLayout;
+    private ProgressDialog progressDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,15 +42,25 @@ public class SignUpActivity extends AppCompatActivity {
         input_lastName = (EditText) findViewById(R.id.input_lastName);
         input_name = (EditText) findViewById(R.id.input_name);
 
-        relativeLayout = (RelativeLayout) findViewById(R.id.activity_sign_up);
+//        relativeLayout = (RelativeLayout) findViewById(R.id.activity_sign_up);
 
         btn_signup = (Button) findViewById(R.id.btn_signup);
         btn_signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                showProgresPopUp();
                 checkFieldsAndContinue();
             }
         });
+    }
+
+    private void showProgresPopUp() {
+
+        progressDialog = new ProgressDialog(SignUpActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
     }
 
     private void checkFieldsAndContinue() {
@@ -62,18 +75,30 @@ public class SignUpActivity extends AppCompatActivity {
         params.put("lastName", input_name.getText().toString());
 
 
-        //RETROFIT
-        /*
-        RETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFIT
-        RETRRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITOFIT
-        RETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFIT
-        RETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFIT
-        RETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFITRETROFIT
+        Call<User> signUpProcess = RetrofitAPIService.getInstance().signup(params);
 
-         */
+        signUpProcess.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                progressDialog.dismiss();
 
-        Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
-        startActivity(i);
+                /*CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR
+                **CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR
+                **CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR*/
+
+                Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+                startActivity(i);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                progressDialog.dismiss();
+                showCustomSnackBar("Server Error");
+
+                Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+                startActivity(i);
+            }
+        });
 
     }
 

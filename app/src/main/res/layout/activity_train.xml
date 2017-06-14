@@ -8,39 +8,60 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/background"
     tools:context="com.example.nicolaspickelny.androidcustomkeyboard.Activities.TrainActivity">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#ffffff">
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="43dp"
+        android:id="@+id/textView4" />
 
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_above="@+id/relativeAd"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:background="@color/background"
+        android:keyBackground="@color/background"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
 
+    <LinearLayout
+        android:id="@+id/relativeAd"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/divider"
+        android:gravity="center"
+        android:orientation="vertical">
+    </LinearLayout>
 
-        <android.inputmethodservice.KeyboardView
-            android:id="@+id/keyboard_view"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_above="@+id/relativeAd"
-            android:layout_centerHorizontal="true"
-            android:focusable="true"
-            android:background="@color/background"
-            android:keyBackground="@color/background"
-            android:focusableInTouchMode="true"
-            android:visibility="gone" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:id="@+id/editText" />
 
-        <LinearLayout
-            android:id="@+id/relativeAd"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@color/divider"
-            android:gravity="center"
-            android:orientation="vertical">
-        </LinearLayout>
-    </RelativeLayout>
+    <Button
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="144dp"
+        android:id="@+id/button" />
+
 
 </RelativeLayout>

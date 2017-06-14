@@ -24,6 +24,9 @@ public interface ServerInterface {
     @POST("/api/user/login")
     Call<User> login(@Body HashMap<String,String> body);
 
+    @POST("/api/user/signup")
+    Call<User> signup(@Body HashMap<String,String> body);
+
     @POST("/api/user/postData")
     Call<ResponseCode> postData(@Body HashMap<String,String> body);
 

@@ -12,14 +12,21 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.example.nicolaspickelny.androidcustomkeyboard.R;
 
 import java.util.Date;
 import java.util.HashMap;
 
 public class TrainActivity extends AppCompatActivity {
+
+    private Button btnCounter;
+    private TextView tvCoutner;
 
     private Keyboard keyboard;
     protected KeyboardView keyboardView;
@@ -29,7 +36,6 @@ public class TrainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
-
         keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
         keyboardView.setPreviewEnabled(false);
         keyboard = new Keyboard(this, R.xml.qwerty);
@@ -38,6 +44,19 @@ public class TrainActivity extends AppCompatActivity {
 
         //registerEditText(R.id.before_input);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+
+        btnCounter = (Button) findViewById(R.id.button);
+        btnCounter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                YoYo.with(Techniques.Tada)
+                        .duration(700)
+                        .repeat(5)
+                        .playOn(findViewById(R.id.textView4));
+            }
+        });
+
     }
 
 

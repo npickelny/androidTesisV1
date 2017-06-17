@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -30,6 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText input_email;
     private EditText input_lastName;
     private EditText input_name;
+    private CheckBox checkBox;
 
     private ProgressDialog progressDialog = null;
 
@@ -41,6 +43,7 @@ public class SignUpActivity extends AppCompatActivity {
         input_email = (EditText) findViewById(R.id.input_email);
         input_lastName = (EditText) findViewById(R.id.input_lastName);
         input_name = (EditText) findViewById(R.id.input_name);
+        checkBox = (CheckBox) findViewById(R.id.checkBox2);
 
 //        relativeLayout = (RelativeLayout) findViewById(R.id.activity_sign_up);
 
@@ -77,29 +80,34 @@ public class SignUpActivity extends AppCompatActivity {
 
         Call<User> signUpProcess = RetrofitAPIService.getInstance().signup(params);
 
-        signUpProcess.enqueue(new Callback<User>() {
-            @Override
-            public void onResponse(Call<User> call, Response<User> response) {
-                progressDialog.dismiss();
+
+        if(!checkBox.isChecked()){
+            Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+            startActivity(i);
+        } else {
+            signUpProcess.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    progressDialog.dismiss();
 
                 /*CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR
                 **CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR
                 **CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR*/
 
-                Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
-                startActivity(i);
-            }
+                    Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+                    startActivity(i);
+                }
 
-            @Override
-            public void onFailure(Call<User> call, Throwable t) {
-                progressDialog.dismiss();
-                showCustomSnackBar("Server Error");
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    progressDialog.dismiss();
+                    showCustomSnackBar("Server Error");
 
-                Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
-                startActivity(i);
-            }
-        });
-
+                    Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+                    startActivity(i);
+                }
+            });
+        }
     }
 
 

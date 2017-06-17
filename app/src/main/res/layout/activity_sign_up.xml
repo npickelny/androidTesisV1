@@ -18,7 +18,16 @@
         android:layout_height="wrap_content"
         android:paddingTop="56dp"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:id="@+id/linearLayout">
+
+        <CheckBox
+            android:text="Server Validation?"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/linearLayout"
+            android:id="@+id/checkBox2"
+            android:layout_gravity="center"/>
 
         <ImageView android:src="@drawable/splashid"
             android:layout_width="wrap_content"
@@ -84,5 +93,7 @@
 
 
     </LinearLayout>
+
+
 
 </RelativeLayout>

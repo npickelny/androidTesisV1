@@ -40,8 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
-
         btnLogin = (Button) findViewById(R.id.butLogin);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
                 loginStep1();
             }
         });
-
-
         etSignUp = (TextView) findViewById(R.id.link_signup);
         etSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,13 +58,19 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void showProgresPopUp() {
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if(progressDialog.isShowing()){
+//            progressDialog.dismiss();
+//        }
+//    }
 
+    private void showProgresPopUp() {
         progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
-
     }
 
     public void loginStep1() {
@@ -87,11 +89,18 @@ public class LoginActivity extends AppCompatActivity {
         etUserMail = (EditText) findViewById(R.id.Email);
         String email = etUserMail.getText().toString();
 
+        if(email.equalsIgnoreCase("")){
+            showCustomSnackBar("Email field is Empty");
+            return;
+        }
+
+        loginStep2(email);
+    }
+
+    public void loginStep2(String email){
         final HashMap<String, String> params = new HashMap<>(2);
         params.put("email", email);
-
         Call<User> loginCall = RetrofitAPIService.getInstance().login(params);
-
         loginCall.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -114,7 +123,6 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
 
     private void showCustomSnackBar(String msg){
         Snackbar snack = Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG);

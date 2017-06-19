@@ -6,6 +6,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     private Button btn_signup;
     private EditText input_email;
@@ -57,6 +60,14 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if(progressDialog.isShowing()){
+//            progressDialog.dismiss();
+//        }
+//    }
+
     private void showProgresPopUp() {
 
         progressDialog = new ProgressDialog(SignUpActivity.this, R.style.AppTheme_Dark_Dialog);
@@ -78,28 +89,26 @@ public class SignUpActivity extends AppCompatActivity {
         params.put("lastName", input_name.getText().toString());
 
 
-        Call<User> signUpProcess = RetrofitAPIService.getInstance().signup(params);
+        Call<String> signUpProcess = RetrofitAPIService.getInstance().signup(params);
 
 
         if(!checkBox.isChecked()){
-            Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+            Intent i = new Intent(SignUpActivity.this, TrainActivity2.class);
             startActivity(i);
         } else {
-            signUpProcess.enqueue(new Callback<User>() {
+            signUpProcess.enqueue(new Callback<String>() {
                 @Override
-                public void onResponse(Call<User> call, Response<User> response) {
+                public void onResponse(Call<String> call, Response<String> response) {
                     progressDialog.dismiss();
-
-                /*CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR
-                **CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR
-                **CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR CHECK FOR ERROR*/
+                    String aux = response.body();
+                    Log.i(TAG, aux);
 
                     Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
                     startActivity(i);
                 }
 
                 @Override
-                public void onFailure(Call<User> call, Throwable t) {
+                public void onFailure(Call<String> call, Throwable t) {
                     progressDialog.dismiss();
                     showCustomSnackBar("Server Error");
 

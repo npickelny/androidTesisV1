@@ -25,13 +25,16 @@ public interface ServerInterface {
     Call<User> login(@Body HashMap<String,String> body);
 
     @POST("/api/user/signup")
-    Call<User> signup(@Body HashMap<String,String> body);
+    Call<String> signup(@Body HashMap<String,String> body);
 
     @POST("/api/user/postData")
     Call<ResponseCode> postData(@Body HashMap<String,String> body);
 
     @POST("/api/data/sendData")
     Call<ResponseCode> sendData(@Body HashMap<String,String> body);
+
+    @POST("/api/data/trainData")
+    Call<ResponseCode> sendTrainingData(@Body HashMap<String,String> body);
 }
 
 

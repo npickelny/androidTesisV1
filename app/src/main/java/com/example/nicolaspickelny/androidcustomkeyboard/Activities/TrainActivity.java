@@ -5,7 +5,9 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -48,14 +50,14 @@ public class TrainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
-//        keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
-//        keyboardView.setPreviewEnabled(false);
-//        keyboard = new Keyboard(this, R.xml.qwerty);
-//        keyboardView.setKeyboard(keyboard);
-//        keyboardView.setOnKeyboardActionListener(keyboardActionListener);
-//
-//        //registerEditText(R.id.before_input);
-//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
+        keyboardView.setPreviewEnabled(false);
+        keyboard = new Keyboard(this, R.xml.qwerty);
+        keyboardView.setKeyboard(keyboard);
+        keyboardView.setOnKeyboardActionListener(keyboardActionListener);
+
+        registerEditText(R.id.editText);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         listViewTest = (ListView) findViewById(R.id.listViewTest);
 
@@ -79,15 +81,36 @@ public class TrainActivity extends AppCompatActivity {
             }
         });
 
-
-        etFrase = (EditText) findViewById(R.id.editText);
-        etFrase.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Log.d(TAG,"BLABLA BLA");
-                return false;
-            }
-        });
+//
+//        etFrase = (EditText) findViewById(R.id.editText);
+//        etFrase.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View v, int keyCode, KeyEvent event) {
+//                Log.d(TAG,"BLABLA BLA");
+//                Log.i("KEY", Integer.toString(keyCode));
+//                return false;
+//            }
+//        });
+//
+//        etFrase.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//                // TODO Auto-generated method stub
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                // TODO Auto-generated method stub
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//                // TODO Auto-generated method stub
+//            }
+//        });
 
     }
 

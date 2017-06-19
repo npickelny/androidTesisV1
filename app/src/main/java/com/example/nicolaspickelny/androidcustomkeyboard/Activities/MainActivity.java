@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -31,6 +33,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import Network.RetrofitAPIService;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
     protected LetterItem[] keyPressArray = new LetterItem[34];
 //    protected LetterItem[][] keyAirArray = new LetterItem[27][27];
     protected LetterItem[][] keyAirArray = new LetterItem[34][34];
+    private int mCurrentKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,10 +111,12 @@ public class MainActivity extends AppCompatActivity {
 
             params.put("keyPressArray", keyPressArrayJSON);
             params.put("keyAirArray", keyAirArrayJSON);
+            params.put("email", "nico1@pick.com");
 
             Log.d(TAG, params.toString());
 
-            Call<ResponseCode> sendDataCall = retrofit.sendData(params);
+//            Call<ResponseCode> sendDataCall = retrofit.sendData(params);
+            Call<ResponseCode> sendDataCall = retrofit.sendTrainingData(params);
 
             sendDataCall.enqueue(new Callback<ResponseCode>() {
                 @Override
@@ -165,8 +171,30 @@ public class MainActivity extends AppCompatActivity {
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
         registerEditText(R.id.before_input);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        List<InputMethodInfo> mInputMethodProperties = imm.getEnabledInputMethodList();
+
+        final int N = mInputMethodProperties.size();
+
+        for (int i = 0; i < N; i++) {
+
+            InputMethodInfo imi = mInputMethodProperties.get(i);
+
+            if (imi.getId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD))) {
+
+                //imi contains the information about the keyboard you are using
+                break;
+            }
+        }
+
+
+        InputMethodManager inputManager = (InputMethodManager) this.getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+
     }
+
 
     private void inicializarArray(LetterItem[][] keyAirArray) {
         for(int i=0; i<34; i++){
@@ -194,6 +222,26 @@ public class MainActivity extends AppCompatActivity {
         textToWrite.setText(frases[strRand-1]);
 
     }
+
+//    @Override public View onCreateInputView() {
+//        mCurrentKeyboard = getSharedPreferences("TAIGI_IME", 0).getInt("keyboard",0);
+//        mInputView = new MyKeyboard(getBaseContext());
+//        mInputView.setOnKeyboardActionListener((OnKeyboardActionListener) this);
+//        mInputView.setKeyboard(mKeyboards[mCurrentKeyboard]);
+//        mInputView.setPreviewEnabled(true);
+//        if(mCandidateView == null){
+//            mCandidateView = new CandidateView(getBaseContext());
+//            mCandidateView.setService(this);
+//            mCandidateView.setTypeface(mFont_hj, mFont_ltn);
+//        }
+//        mComposer = new Composer(mCandidateView,this);
+//
+//        if(mComposing.length() > 0){
+//            getCurrentInputConnection().setComposingText(mComposing,1);
+//        }
+//
+//        return mInputView;
+//    }
 
 
     public KeyboardView.OnKeyboardActionListener keyboardActionListener = new KeyboardView.OnKeyboardActionListener() {

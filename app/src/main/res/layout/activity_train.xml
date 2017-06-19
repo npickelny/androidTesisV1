@@ -44,9 +44,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:text="ESCRIBIR ACA"
-                android:ems="19"
+                android:text=""
                 android:id="@+id/editText"
                 android:textStyle="bold"
                 android:layout_below="@+id/textView4"

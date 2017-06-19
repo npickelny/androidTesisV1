@@ -13,7 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".Activities.MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -28,7 +28,8 @@
         </activity>
         <activity android:name=".ShowArrays" />
         <activity android:name=".Activities.SignUpActivity" />
-        <activity android:name=".Activities.TrainActivity"></activity>
+        <activity android:name=".Activities.TrainActivity" />
+        <activity android:name=".Activities.TrainActivity2"></activity>
     </application>
 
 </manifest>

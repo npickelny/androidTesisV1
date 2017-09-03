@@ -171,28 +171,22 @@ public class MainActivity extends AppCompatActivity {
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
         registerEditText(R.id.before_input);
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        List<InputMethodInfo> mInputMethodProperties = imm.getEnabledInputMethodList();
-
-        final int N = mInputMethodProperties.size();
-
-        for (int i = 0; i < N; i++) {
-
-            InputMethodInfo imi = mInputMethodProperties.get(i);
-
-            if (imi.getId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD))) {
-
-                //imi contains the information about the keyboard you are using
-                break;
-            }
-        }
-
-
-        InputMethodManager inputManager = (InputMethodManager) this.getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-
+//        String id = Settings.Secure.getString(getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
+//        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//        List<InputMethodInfo> mInputMethodProperties = imm.getEnabledInputMethodList();
+//
+//        final int N = mInputMethodProperties.size();
+//
+//        for (int i = 0; i < N; i++) {
+//            InputMethodInfo imi = mInputMethodProperties.get(i);
+//            if (imi.getId().equals(Settings.Secure.getString(getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD))) {
+//                //imi contains the information about the keyboard you are using
+//                break;
+//            }
+//        }
+//        InputMethodManager inputManager = (InputMethodManager) this.getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
 

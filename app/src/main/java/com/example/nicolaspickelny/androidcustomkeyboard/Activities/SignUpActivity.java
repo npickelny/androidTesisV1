@@ -93,7 +93,7 @@ public class SignUpActivity extends AppCompatActivity {
 
 
         if(!checkBox.isChecked()){
-            Intent i = new Intent(SignUpActivity.this, TrainActivity2.class);
+            Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
             startActivity(i);
         } else {
             signUpProcess.enqueue(new Callback<String>() {

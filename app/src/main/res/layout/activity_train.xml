@@ -19,6 +19,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <!--Content of the ScrollView-->
+
+
+
             <TextView
                 android:text="10"
                 android:layout_width="wrap_content"
@@ -57,11 +60,20 @@
                 android:layout_below="@+id/textView4"
                 android:layout_centerHorizontal="true"/>
 
-            <ListView
+
+            <TextView
+                android:text=""
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/listViewTest"
-                android:layout_weight="1"/>
+                android:id="@+id/tvResult" />
+
+            <Button
+                android:text="Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btnReady" />
+
+
 
         </LinearLayout>
 

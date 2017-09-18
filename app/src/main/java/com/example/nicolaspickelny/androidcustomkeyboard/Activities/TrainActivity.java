@@ -21,6 +21,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -38,6 +39,7 @@ public class TrainActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     private Button btnCounter;
+    private Button btnReady;
     private TextView tvCoutner;
 
     private ListView listViewTest;
@@ -57,9 +59,13 @@ public class TrainActivity extends AppCompatActivity {
     private Long sueltoTecla;
     private HashMap<Integer, String> hmap;
     protected ArrayList<String> alAire, alTecla;
+    private TextView tvResult;
 
-    protected LetterItem[] keyPressArray = new LetterItem[34];
-    protected LetterItem[][] keyAirArray = new LetterItem[34][34];
+    private EditText editText;
+    protected LetterItem[] keyPressArray = new LetterItem[41];
+    protected LetterItem[][] keyAirArray = new LetterItem[41][41];
+
+    protected ArrayList<LetterItem[]> trainingData;
     private TextView textToWrite;
 
     @Override
@@ -73,30 +79,36 @@ public class TrainActivity extends AppCompatActivity {
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
-        registerEditText(R.id.editText);
+        editText = (EditText) findViewById(R.id.editText);
+        registerEditText(editText.getId());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        listViewTest = (ListView) findViewById(R.id.listViewTest);
+        tvResult = (TextView) findViewById(R.id.tvResult);
+        trainingData = new ArrayList<LetterItem[]>();
 
         frasesArrayTest = new ArrayList<String>();
-        listAdapterTest = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, frasesArrayTest);
-
-        listViewTest.setAdapter(listAdapterTest);
 
         alTecla = new ArrayList<String>();
         alAire = new ArrayList<String>();
 
         tvCoutner = (TextView) findViewById(R.id.textView4);
 
+        btnReady = (Button) findViewById(R.id.btnReady);
+        btnReady.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetAndCount();
+
+            }
+        });
+
+
+
         btnCounter = (Button) findViewById(R.id.button);
         btnCounter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvCoutner.setText(String.valueOf(Integer.parseInt(tvCoutner.getText().toString())-1));
-                YoYo.with(Techniques.Landing)
-                        .duration(700)
-                        .repeat(0)
-                        .playOn(tvCoutner);
+                decrementCounter();
             }
         });
 
@@ -107,9 +119,26 @@ public class TrainActivity extends AppCompatActivity {
         inicializarArray(keyAirArray);
     }
 
+    private void decrementCounter(){
+        tvCoutner.setText(String.valueOf(Integer.parseInt(tvCoutner.getText().toString())-1));
+        YoYo.with(Techniques.Landing)
+                .duration(700)
+                .repeat(0)
+                .playOn(tvCoutner);
+    }
+
+    private void resetAndCount() {
+        trainingData.add(keyPressArray);
+        decrementCounter();
+        inicializarArray(keyPressArray);
+        inicializarArray(keyAirArray);
+        tvResult.setText("");
+        editText.setText("");
+    }
+
     private void inicializarArray(LetterItem[][] keyAirArray) {
-        for(int i=0; i<34; i++){
-            for(int j=0; j<34; j++){
+        for(int i=0; i<41; i++){
+            for(int j=0; j<41; j++){
                 keyAirArray[i][j] = new LetterItem();
                 keyAirArray[i][j].setLetra1(hmap.get(i+29));
                 keyAirArray[i][j].setLetra2(hmap.get(j+29));
@@ -118,7 +147,7 @@ public class TrainActivity extends AppCompatActivity {
     }
 
     private void inicializarArray(LetterItem[] keyPressArray) {
-        for(int j=0; j<34; j++){
+        for(int j=0; j<41; j++){
             keyPressArray[j] = new LetterItem();
             keyPressArray[j].setLetra1(hmap.get(j+29));
         }
@@ -133,28 +162,37 @@ public class TrainActivity extends AppCompatActivity {
         textToWrite.setText(frases[strRand-1]);
     }
 
+
+
     public KeyboardView.OnKeyboardActionListener keyboardActionListener = new KeyboardView.OnKeyboardActionListener() {
         @Override
         public void onPress(int primaryCode) {
-            dOneKeyPress = new Date();
-            if(primero != false) {
-                Date onpress = new Date();
-                tiempoDiferenciaEntreTeclas = onpress.getTime() - sueltoTecla;
-                Log.d("TestAire","TestAire: tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+           if(this.checkNonLeterKeys(primaryCode, "onPress")){
+               //67 code for delete
+               return;
+           }
+           tvResult.setText(tvResult.getText().toString() + hmap.get(primaryCode));
 
-                alAire.add("tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
-
-                keyAirArray[primarykeyguardada-29][primaryCode-29].addValue(tiempoDiferenciaEntreTeclas);
-            }
-            else{
-                primero = true;
-            }
+           dOneKeyPress = new Date();
+           if(primero != false) {
+               Date onpress = new Date();
+               tiempoDiferenciaEntreTeclas = onpress.getTime() - sueltoTecla;
+               Log.d("TestAire","TestAire: tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+               alAire.add("tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+               keyAirArray[primarykeyguardada-29][primaryCode-29].addValue(tiempoDiferenciaEntreTeclas);
+           }
+           else{
+               primero = true;
+           }
         }
 
         @Override
         public void onRelease(int primaryCode) {
 
             //eTexto.setText(eTexto.getText().toString() + (primaryCode));//getKeyForPrimaryCode
+            if(this.checkNonLeterKeys(primaryCode, "onRelease")){
+                return;
+            }
 
             Date dOneKeyRelease = new Date();
             primarykeyguardada=primaryCode;
@@ -191,11 +229,22 @@ public class TrainActivity extends AppCompatActivity {
 
         @Override
         public void swipeUp() {  }
+
+        private boolean checkNonLeterKeys(int code, String trigger){
+            if(code == -3){
+                if (isCustomKeyboardVisible()) hideCustomKeyboard();
+                return true;
+            }
+            if(code == 67){
+//                if(trigger.equals("onRelease")){
+//
+//                }
+                    //deleteLastLetter();
+                return true;
+            }
+            return false;
+        }
     };
-
-    //protected abstract int getLayoutResourceId();
-
-    //protected abstract void displayCalculatedResult();
 
     public void registerEditText(int resid) {
         // Find the EditText 'res_id'
@@ -282,6 +331,9 @@ public class TrainActivity extends AppCompatActivity {
         hmap.put(53,"y");
         hmap.put(54,"z");
         hmap.put(62,"espacio");
+        hmap.put(55,",");
+        hmap.put(56,".");
+//        hmap.put(67,"delete");
     }
 
 }

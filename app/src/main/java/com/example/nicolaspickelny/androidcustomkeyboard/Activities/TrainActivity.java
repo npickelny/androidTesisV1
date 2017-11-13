@@ -1,14 +1,16 @@
 package com.example.nicolaspickelny.androidcustomkeyboard.Activities;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -17,7 +19,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -27,12 +28,20 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.nicolaspickelny.androidcustomkeyboard.LetterItem;
 import com.example.nicolaspickelny.androidcustomkeyboard.R;
+import com.example.nicolaspickelny.androidcustomkeyboard.ShowArrays;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
+
+import Network.RetrofitAPIService;
+import Network.ServerInterface;
+import restClases.ResponseCode;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class TrainActivity extends AppCompatActivity {
 
@@ -40,7 +49,7 @@ public class TrainActivity extends AppCompatActivity {
 
     private Button btnCounter;
     private Button btnReady;
-    private TextView tvCoutner;
+    private TextView tvCounter;
 
     private ListView listViewTest;
 
@@ -59,14 +68,15 @@ public class TrainActivity extends AppCompatActivity {
     private Long sueltoTecla;
     private HashMap<Integer, String> hmap;
     protected ArrayList<String> alAire, alTecla;
-    private TextView tvResult;
 
-    private EditText editText;
+    private EditText etPhrase;
     protected LetterItem[] keyPressArray = new LetterItem[41];
     protected LetterItem[][] keyAirArray = new LetterItem[41][41];
 
     protected ArrayList<LetterItem[]> trainingData;
     private TextView textToWrite;
+    private TextView intentos;
+    final Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,11 +89,10 @@ public class TrainActivity extends AppCompatActivity {
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
-        editText = (EditText) findViewById(R.id.editText);
-        registerEditText(editText.getId());
+        etPhrase = (EditText) findViewById(R.id.editText);
+        registerEditText(etPhrase.getId());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        tvResult = (TextView) findViewById(R.id.tvResult);
         trainingData = new ArrayList<LetterItem[]>();
 
         frasesArrayTest = new ArrayList<String>();
@@ -91,25 +100,15 @@ public class TrainActivity extends AppCompatActivity {
         alTecla = new ArrayList<String>();
         alAire = new ArrayList<String>();
 
-        tvCoutner = (TextView) findViewById(R.id.textView4);
+        tvCounter = (TextView) findViewById(R.id.tvCounter);
+        intentos = (TextView) findViewById(R.id.intentos);
 
         btnReady = (Button) findViewById(R.id.btnReady);
         btnReady.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetAndCount();
-
-            }
-        });
-
-
-
-        btnCounter = (Button) findViewById(R.id.button);
-        btnCounter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                decrementCounter();
-            }
+                checkIfPhraseCompleted();
+             }
         });
 
         this.setRandomPhrase();
@@ -117,23 +116,98 @@ public class TrainActivity extends AppCompatActivity {
 
         inicializarArray(keyPressArray);
         inicializarArray(keyAirArray);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        setHeaderPhrasePluralized();
+    }
+
+    private void setHeaderPhrasePluralized() {
+        int counter = Integer.parseInt(tvCounter.getText().toString());
+        Resources res = getResources();
+        String i = res.getQuantityString(R.plurals.intentos, counter);
+        intentos.setText(" " + i);
+    }
+
+    private void checkIfPhraseCompleted() {
+        if(!phraseCompleted()){
+            showCustomSnackBar("La frase no esta completa");
+            return;
+        }
+        trainingData.add(keyPressArray);
+        resetAndCount();
+        setHeaderPhrasePluralized();
+
+        if(finishTraining()){
+            sendTrainingData();
+        }
+    }
+
+    private void sendTrainingData() {
+        ServerInterface retrofit = RetrofitAPIService.getInstance();
+
+        final HashMap<String, String> params = new HashMap<>(2);
+        Gson gson = new Gson();
+
+        String trainingDataJSON = gson.toJson(trainingData);
+
+        params.put("trainingData", trainingDataJSON);
+        params.put("email", "nico1@pick.com");
+
+        Log.d(TAG, params.toString());
+
+        Call<ResponseCode> sendDataCall = retrofit.sendTrainingData(params);
+
+        sendDataCall.enqueue(new Callback<ResponseCode>() {
+            @Override
+            public void onResponse(Call<ResponseCode> call, Response<ResponseCode> response) {
+                ResponseCode responseCode = response.body();
+
+                Intent i = new Intent(TrainActivity.this, ShowArrays.class);
+                if(responseCode.getResultCode() == 10){ //TODO change code and set it in cofing file
+                    i.putExtra("name", "NICO HARCODED");
+                } else {
+                    i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
+                }
+                startActivity(i);
+            }
+
+            @Override
+            public void onFailure(Call<ResponseCode> call, Throwable t) {
+                Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public boolean finishTraining(){
+        if(Integer.parseInt(tvCounter.getText().toString()) == 0)
+            return true;
+        return false;
+    }
+
+    public boolean phraseCompleted(){
+        return etPhrase.getText().toString().equalsIgnoreCase(textToWrite.getText().toString());
+    }
+
+    private void showCustomSnackBar(String msg){
+        Snackbar snack = Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG);
+        View snackView = snack.getView();
+        snackView.setBackgroundColor(ContextCompat.getColor(TrainActivity.this, R.color.GREY));
+        snack.show();
     }
 
     private void decrementCounter(){
-        tvCoutner.setText(String.valueOf(Integer.parseInt(tvCoutner.getText().toString())-1));
+        tvCounter.setText(String.valueOf(Integer.parseInt(tvCounter.getText().toString())-1));
         YoYo.with(Techniques.Landing)
                 .duration(700)
                 .repeat(0)
-                .playOn(tvCoutner);
+                .playOn(tvCounter);
     }
 
     private void resetAndCount() {
-        trainingData.add(keyPressArray);
         decrementCounter();
         inicializarArray(keyPressArray);
         inicializarArray(keyAirArray);
-        tvResult.setText("");
-        editText.setText("");
+        etPhrase.setText("");
     }
 
     private void inicializarArray(LetterItem[][] keyAirArray) {
@@ -171,7 +245,6 @@ public class TrainActivity extends AppCompatActivity {
                //67 code for delete
                return;
            }
-           tvResult.setText(tvResult.getText().toString() + hmap.get(primaryCode));
 
            dOneKeyPress = new Date();
            if(primero != false) {

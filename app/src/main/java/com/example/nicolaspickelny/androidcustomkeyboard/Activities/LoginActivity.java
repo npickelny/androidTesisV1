@@ -91,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(email.equalsIgnoreCase("")){
             showCustomSnackBar("Email field is Empty");
+            progressDialog.dismiss();
             return;
         }
 

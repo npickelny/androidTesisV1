@@ -18,37 +18,42 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <!--Content of the ScrollView-->
 
-
-
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
             <TextView
                 android:text="10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/textView4"
+                android:id="@+id/tvCounter"
                 android:textSize="30dp"
                 android:layout_gravity="center"/>
 
-            <Button
-                android:text="Button"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:id="@+id/button"/>
+                android:id="@+id/intentos"
+                android:textSize="30dp"
+                android:layout_gravity="center"/>
+            </LinearLayout>
+
 
             <TextView
-                android:id="@+id/textToWrite"
+                android:id="@+id/textToWrite2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:textSize="17dp"
-                android:textColor="@color/colorAccent"
+                android:textColor="@color/icons"
                 android:textStyle="bold" />
 
             <EditText
@@ -57,23 +62,27 @@
                 android:text=""
                 android:id="@+id/editText"
                 android:textStyle="bold"
-                android:layout_below="@+id/textView4"
+                android:layout_below="@+id/tvCounter"
                 android:layout_centerHorizontal="true"/>
 
-
-            <TextView
-                android:text=""
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvResult" />
-
             <Button
-                android:text="Button"
+                android:text="Siguiente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/btnReady" />
 
-
+            <TextView
+                android:id="@+id/textToWrite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="17dp"
+                android:textColor="@color/icons"
+                android:textStyle="bold"
+                android:gravity="center_horizontal"
+                android:layout_gravity="bottom"/>
 
         </LinearLayout>
 

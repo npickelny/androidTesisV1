@@ -7,9 +7,9 @@ import java.io.Serializable;
  */
 
 public class LetterItem implements Serializable{
-    private int counter;
-    private long total;
-    private String letra1;
+    private int cant;
+    private long timer;
+    private String letter;
     private String letra2;
 
     public String getLetra2() {
@@ -20,41 +20,41 @@ public class LetterItem implements Serializable{
         this.letra2 = letra2;
     }
 
-    public void setCounter(int counter) {
-        this.counter = counter;
+    public void setCant(int cant) {
+        this.cant = cant;
     }
 
-    public void setTotal(long total) {
-        this.total = total;
+    public void setTimer(long timer) {
+        this.timer = timer;
     }
 
-    public String getLetra1() {
-        return letra1;
+    public String getLetter() {
+        return letter;
     }
 
-    public void setLetra1(String letra1) {
-        this.letra1 = letra1;
+    public void setLetter(String letter) {
+        this.letter = letter;
     }
 
     public LetterItem() {
-        this.counter = 0;
-        this.total = 0;
+        this.cant = 0;
+        this.timer = 0;
     }
 
-    public int getCounter() {
-        return counter;
+    public int getCant() {
+        return cant;
     }
 
-    public long getTotal() {
-        return total;
+    public long getTimer() {
+        return timer;
     }
 
     public void addValue(long x){
-        this.counter++;
-        this.total += x;
+        this.cant++;
+        this.timer += x;
     }
 
     public float getAverage(){
-        return (total/ counter);
+        return (timer / cant);
     }
 }

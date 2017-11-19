@@ -133,11 +133,12 @@ public class TrainActivity extends AppCompatActivity {
             showCustomSnackBar("La frase no esta completa");
             return;
         }
-        trainingData.add(keyPressArray);
+        trainingData.add(keyPressArray.clone());
         resetAndCount();
         setHeaderPhrasePluralized();
 
         if(finishTraining()){
+            showCustomSnackBar("Mandando al servidor");
             sendTrainingData();
         }
     }
@@ -179,7 +180,7 @@ public class TrainActivity extends AppCompatActivity {
     }
 
     public boolean finishTraining(){
-        if(Integer.parseInt(tvCounter.getText().toString()) == 0)
+        if(Integer.parseInt(tvCounter.getText().toString()) <= 8)
             return true;
         return false;
     }
@@ -214,7 +215,7 @@ public class TrainActivity extends AppCompatActivity {
         for(int i=0; i<41; i++){
             for(int j=0; j<41; j++){
                 keyAirArray[i][j] = new LetterItem();
-                keyAirArray[i][j].setLetra1(hmap.get(i+29));
+                keyAirArray[i][j].setLetter(hmap.get(i+29));
                 keyAirArray[i][j].setLetra2(hmap.get(j+29));
             }
         }
@@ -223,7 +224,7 @@ public class TrainActivity extends AppCompatActivity {
     private void inicializarArray(LetterItem[] keyPressArray) {
         for(int j=0; j<41; j++){
             keyPressArray[j] = new LetterItem();
-            keyPressArray[j].setLetra1(hmap.get(j+29));
+            keyPressArray[j].setLetter(hmap.get(j+29));
         }
     }
 

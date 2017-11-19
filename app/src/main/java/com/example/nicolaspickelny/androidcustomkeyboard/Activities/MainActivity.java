@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -15,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,7 +31,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 import Network.RetrofitAPIService;
@@ -113,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
 
             Log.d(TAG, params.toString());
 
-//            Call<ResponseCode> sendDataCall = retrofit.sendData(params);
-            Call<ResponseCode> sendDataCall = retrofit.sendTrainingData(params);
+            Call<ResponseCode> sendDataCall = retrofit.sendData(params);
+//            Call<ResponseCode> sendDataCall = retrofit.sendTrainingData(params);
 
             sendDataCall.enqueue(new Callback<ResponseCode>() {
                 @Override
@@ -177,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i=0; i<41; i++){
             for(int j=0; j<41; j++){
                 keyAirArray[i][j] = new LetterItem();
-                keyAirArray[i][j].setLetra1(hmap.get(i+29));
+                keyAirArray[i][j].setLetter(hmap.get(i+29));
                 keyAirArray[i][j].setLetra2(hmap.get(j+29));
             }
         }
@@ -186,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     private void inicializarArray(LetterItem[] keyPressArray) {
         for(int j=0; j<41; j++){
             keyPressArray[j] = new LetterItem();
-            keyPressArray[j].setLetra1(hmap.get(j+29));
+            keyPressArray[j].setLetter(hmap.get(j+29));
         }
     }
 

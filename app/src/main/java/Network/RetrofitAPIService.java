@@ -22,7 +22,7 @@ public class RetrofitAPIService {
             Gson gson = new GsonBuilder().create();
             retrofit = new Retrofit.Builder()
 //                    .baseUrl("http://192.168.0.14:3000")
-                    .baseUrl("http://7825bc3a.ngrok.io")
+                    .baseUrl("http://aed9ad04.ngrok.io")
                     .addConverterFactory(GsonConverterFactory.create())
 //                    .client(new OkHttpClient.Builder()
 //                            .addInterceptor(new LoggingInterceptor())

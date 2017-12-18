@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -200,6 +201,8 @@ public class MainActivity extends AppCompatActivity {
     public KeyboardView.OnKeyboardActionListener keyboardActionListener = new KeyboardView.OnKeyboardActionListener() {
         @Override
         public void onPress(int primaryCode) {
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(getResources().getInteger(R.integer.vibration_length));
             if(this.checkNonLeterKeys(primaryCode, "onPress")){
                 //67 code for delete
                 return;

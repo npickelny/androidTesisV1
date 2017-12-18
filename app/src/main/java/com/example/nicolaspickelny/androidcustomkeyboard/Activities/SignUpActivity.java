@@ -21,6 +21,7 @@ import com.example.nicolaspickelny.androidcustomkeyboard.R;
 import java.util.HashMap;
 
 import Network.RetrofitAPIService;
+import okhttp3.ResponseBody;
 import restClases.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -89,31 +90,29 @@ public class SignUpActivity extends AppCompatActivity {
         params.put("lastName", input_name.getText().toString());
 
 
-        Call<String> signUpProcess = RetrofitAPIService.getInstance().signup(params);
+        Call<ResponseBody> signUpProcess = RetrofitAPIService.getInstance().signup(params);
 
+        Intent i = new Intent(getApplicationContext(), TrainActivity.class);
 
         if(!checkBox.isChecked()){
-            Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+            i.putExtra("email", input_email.getText().toString());
             startActivity(i);
         } else {
-            signUpProcess.enqueue(new Callback<String>() {
+            signUpProcess.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<String> call, Response<String> response) {
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     progressDialog.dismiss();
-                    String aux = response.body();
-                    Log.i(TAG, aux);
+                    ResponseBody aux = response.body();
 
-                    Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
+                    Intent i = new Intent(getApplicationContext(), TrainActivity.class);
+                    i.putExtra("email", input_email.getText().toString());
                     startActivity(i);
                 }
 
                 @Override
-                public void onFailure(Call<String> call, Throwable t) {
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
                     progressDialog.dismiss();
                     showCustomSnackBar("Server Error");
-
-                    Intent i = new Intent(SignUpActivity.this, TrainActivity.class);
-                    startActivity(i);
                 }
             });
         }

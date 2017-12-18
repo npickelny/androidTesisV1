@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -58,7 +59,6 @@ public class TrainActivity extends AppCompatActivity {
     private ArrayList<String> frasesArrayTest;
     private ArrayAdapter<String> listAdapterTest;
 
-
     private Date dOneKeyPress;
     private long tiempoPresionDeTecla;
     private long[][] aux;
@@ -77,6 +77,8 @@ public class TrainActivity extends AppCompatActivity {
     private TextView textToWrite;
     private TextView intentos;
     final Context context = this;
+
+    private String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +113,7 @@ public class TrainActivity extends AppCompatActivity {
              }
         });
 
+        email = getIntent().getStringExtra("email");
         this.setRandomPhrase();
         this.loadLetterTransformer();
 
@@ -129,10 +132,10 @@ public class TrainActivity extends AppCompatActivity {
     }
 
     private void checkIfPhraseCompleted() {
-        if(!phraseCompleted()){
-            showCustomSnackBar("La frase no esta completa");
-            return;
-        }
+//        if(!phraseCompleted()){
+//            showCustomSnackBar("La frase no esta completa");
+//            return;
+//        }
         trainingData.add(keyPressArray.clone());
         resetAndCount();
         setHeaderPhrasePluralized();
@@ -152,9 +155,11 @@ public class TrainActivity extends AppCompatActivity {
         String trainingDataJSON = gson.toJson(trainingData);
 
         params.put("trainingData", trainingDataJSON);
-        params.put("email", "nico1@pick.com");
+//        params.put("email", "otro@gmail.com");
+        params.put("email", email);
 
         Log.d(TAG, params.toString());
+        Log.d(TAG, email);
 
         Call<ResponseCode> sendDataCall = retrofit.sendTrainingData(params);
 
@@ -180,7 +185,7 @@ public class TrainActivity extends AppCompatActivity {
     }
 
     public boolean finishTraining(){
-        if(Integer.parseInt(tvCounter.getText().toString()) <= 8)
+        if(Integer.parseInt(tvCounter.getText().toString()) <= 9)
             return true;
         return false;
     }
@@ -242,6 +247,9 @@ public class TrainActivity extends AppCompatActivity {
     public KeyboardView.OnKeyboardActionListener keyboardActionListener = new KeyboardView.OnKeyboardActionListener() {
         @Override
         public void onPress(int primaryCode) {
+            Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            v.vibrate(getResources().getInteger(R.integer.vibration_length));
+
            if(this.checkNonLeterKeys(primaryCode, "onPress")){
                //67 code for delete
                return;

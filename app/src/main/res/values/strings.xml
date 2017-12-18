@@ -3,4 +3,5 @@
     <string name="before_value">Antes</string>
     <string name="simple_ime">Simple IME</string>
     <string name="subtype_en_US">English (US)</string>
+    <integer name="vibration_length">20</integer>
 </resources>

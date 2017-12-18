@@ -2,6 +2,7 @@ package Network;
 
 import java.util.HashMap;
 
+import okhttp3.ResponseBody;
 import restClases.HealthCheck;
 import restClases.ResponseCode;
 import restClases.User;
@@ -25,7 +26,7 @@ public interface ServerInterface {
     Call<User> login(@Body HashMap<String,String> body);
 
     @POST("/api/user/signup")
-    Call<String> signup(@Body HashMap<String,String> body);
+    Call<ResponseBody> signup(@Body HashMap<String,String> body);
 
     @POST("/api/user/postData")
     Call<ResponseCode> postData(@Body HashMap<String,String> body);

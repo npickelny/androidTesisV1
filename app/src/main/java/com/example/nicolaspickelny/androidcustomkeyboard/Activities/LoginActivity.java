@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 User usr = response.body();
                 if (usr == null) {
-                    showCustomSnackBar("The email provided is not recognized");
+                    showCustomSnackBar("No reconocimos el email");
                 }
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);

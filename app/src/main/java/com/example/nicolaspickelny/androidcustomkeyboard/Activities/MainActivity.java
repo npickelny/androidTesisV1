@@ -37,6 +37,7 @@ import java.util.Random;
 import Network.RetrofitAPIService;
 import Network.ServerInterface;
 import restClases.ResponseCode;
+import restClases.ResponseMessage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -107,20 +108,21 @@ public class MainActivity extends AppCompatActivity {
 
             params.put("keyPressArray", keyPressArrayJSON);
             params.put("keyAirArray", keyAirArrayJSON);
-            params.put("email", "nico1@pick.com");
+            String email = getIntent().getStringExtra("email");
+            params.put("email", email);
 
             Log.d(TAG, params.toString());
 
-            Call<ResponseCode> sendDataCall = retrofit.sendData(params);
+            Call<ResponseMessage> sendDataCall = retrofit.sendData(params);
 //            Call<ResponseCode> sendDataCall = retrofit.sendTrainingData(params);
 
-            sendDataCall.enqueue(new Callback<ResponseCode>() {
+            sendDataCall.enqueue(new Callback<ResponseMessage>() {
                 @Override
-                public void onResponse(Call<ResponseCode> call, Response<ResponseCode> response) {
-                    ResponseCode responseCode = response.body();
+                public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
+                    ResponseMessage responseMsg = response.body();
 
                     Intent i = new Intent(MainActivity.this, ShowArrays.class);
-                    if(responseCode.getResultCode() == 10){ //TODO change code and set it in cofing file
+                    if(responseMsg.getMsg().equalsIgnoreCase("10")){ //TODO change code and set it in cofing file
                         i.putExtra("name", "NICO HARCODED");
                     } else {
                         i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseCode> call, Throwable t) {
+                public void onFailure(Call<ResponseMessage> call, Throwable t) {
                     Toast.makeText(context, "Server Error", Toast.LENGTH_SHORT).show();
                 }
             });

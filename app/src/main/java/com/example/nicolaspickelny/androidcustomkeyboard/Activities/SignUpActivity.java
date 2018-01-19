@@ -22,6 +22,7 @@ import java.util.HashMap;
 
 import Network.RetrofitAPIService;
 import okhttp3.ResponseBody;
+import restClases.ResponseMessage;
 import restClases.User;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +91,7 @@ public class SignUpActivity extends AppCompatActivity {
         params.put("lastName", input_name.getText().toString());
 
 
-        Call<ResponseBody> signUpProcess = RetrofitAPIService.getInstance().signup(params);
+        Call<ResponseMessage> signUpProcess = RetrofitAPIService.getInstance().signup(params);
 
         Intent i = new Intent(getApplicationContext(), TrainActivity.class);
 
@@ -98,11 +99,15 @@ public class SignUpActivity extends AppCompatActivity {
             i.putExtra("email", input_email.getText().toString());
             startActivity(i);
         } else {
-            signUpProcess.enqueue(new Callback<ResponseBody>() {
+            signUpProcess.enqueue(new Callback<ResponseMessage>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
                     progressDialog.dismiss();
-                    ResponseBody aux = response.body();
+                    ResponseMessage aux = response.body();
+                    if(response.code() == 201){
+                        showCustomSnackBar(aux.getMsg());
+                        return;
+                    }
 
                     Intent i = new Intent(getApplicationContext(), TrainActivity.class);
                     i.putExtra("email", input_email.getText().toString());
@@ -110,7 +115,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<ResponseMessage> call, Throwable t) {
                     progressDialog.dismiss();
                     showCustomSnackBar("Server Error");
                 }

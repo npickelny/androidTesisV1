@@ -16,17 +16,12 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.example.nicolaspickelny.androidcustomkeyboard.LetterItem;
 import com.example.nicolaspickelny.androidcustomkeyboard.R;
 import com.example.nicolaspickelny.androidcustomkeyboard.ShowArrays;
@@ -39,26 +34,14 @@ import java.util.Random;
 
 import Network.RetrofitAPIService;
 import Network.ServerInterface;
-import restClases.ResponseCode;
 import restClases.ResponseMessage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TrainActivity extends AppCompatActivity {
-
-    private final String TAG = this.getClass().getSimpleName();
-
-    private Button btnCounter;
-    private Button btnReady;
-    private TextView tvCounter;
-
-    private ListView listViewTest;
-
+public class JustTrainActivity extends AppCompatActivity {
     private Keyboard keyboard;
     protected KeyboardView keyboardView;
-    private ArrayList<String> frasesArrayTest;
-    private ArrayAdapter<String> listAdapterTest;
 
     private Date dOneKeyPress;
     private long tiempoPresionDeTecla;
@@ -71,20 +54,21 @@ public class TrainActivity extends AppCompatActivity {
     protected ArrayList<String> alAire, alTecla;
 
     private EditText etPhrase;
+    private EditText etEmail;
     protected LetterItem[] keyPressArray = new LetterItem[41];
     protected LetterItem[][] keyAirArray = new LetterItem[41][41];
 
     protected ArrayList<LetterItem[]> trainingData;
     private TextView textToWrite;
-    private TextView intentos;
     final Context context = this;
 
     private String email;
-
+    private Button btnReady;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_train);
+        setContentView(R.layout.activity_just_train);
 
         keyboardView = (KeyboardView) findViewById(R.id.keyboard_view);
         keyboardView.setPreviewEnabled(false);
@@ -92,44 +76,24 @@ public class TrainActivity extends AppCompatActivity {
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
-        etPhrase = (EditText) findViewById(R.id.editText);
-        registerEditText(etPhrase.getId());
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        trainingData = new ArrayList<LetterItem[]>();
-
-        frasesArrayTest = new ArrayList<String>();
-
-        alTecla = new ArrayList<String>();
-        alAire = new ArrayList<String>();
-
-        tvCounter = (TextView) findViewById(R.id.tvCounter);
-        intentos = (TextView) findViewById(R.id.intentos);
-
-        btnReady = (Button) findViewById(R.id.btnReady);
+        this.setRandomPhrase();
+        etEmail = (EditText) findViewById(R.id.Email);
+        btnReady = (Button)findViewById(R.id.btnReady);
         btnReady.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkIfPhraseCompleted();
-             }
+            }
         });
-
-        email = getIntent().getStringExtra("email");
-        this.setRandomPhrase();
-        this.loadLetterTransformer();
-
-        inicializarArray(keyPressArray);
-        inicializarArray(keyAirArray);
-
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        setHeaderPhrasePluralized();
     }
 
-    private void setHeaderPhrasePluralized() {
-        int counter = Integer.parseInt(tvCounter.getText().toString());
+    private void setRandomPhrase(){
+        textToWrite = (TextView) findViewById(R.id.textToWrite);
+        Random rand = new Random();
+        int strRand = rand.nextInt(5) + 1;
         Resources res = getResources();
-        String i = res.getQuantityString(R.plurals.intentos, counter);
-        intentos.setText(" " + i);
+        String[] frases = res.getStringArray(R.array.frases);
+        textToWrite.setText(frases[strRand-1]);
     }
 
     private void checkIfPhraseCompleted() {
@@ -138,13 +102,11 @@ public class TrainActivity extends AppCompatActivity {
 //            return;
 //        }
         trainingData.add(keyPressArray.clone());
-        resetAndCount();
-        setHeaderPhrasePluralized();
+        reset();
 
-        if(finishTraining()){
-            showCustomSnackBar("Mandando al servidor");
-            sendTrainingData();
-        }
+        showCustomSnackBar("Mandando al servidor");
+        sendTrainingData();
+
     }
 
     private void sendTrainingData() {
@@ -154,12 +116,9 @@ public class TrainActivity extends AppCompatActivity {
         Gson gson = new Gson();
 
         String trainingDataJSON = gson.toJson(trainingData);
-
+        email = etEmail.getText().toString();
         params.put("trainingData", trainingDataJSON);
         params.put("email", email);
-
-        Log.d(TAG, params.toString());
-        Log.d(TAG, email);
 
         Call<ResponseMessage> sendDataCall = retrofit.sendTrainingData(params);
 
@@ -168,7 +127,7 @@ public class TrainActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
                 ResponseMessage responseMsg = response.body();
 
-                Intent i = new Intent(TrainActivity.this, ShowArrays.class);
+                Intent i = new Intent(JustTrainActivity.this, ShowArrays.class);
                 if(responseMsg.getMsg() == "99"){ // si pasa esto es pq algo se cago zarpado
                     return;
                 } else {
@@ -184,36 +143,24 @@ public class TrainActivity extends AppCompatActivity {
         });
     }
 
-    public boolean finishTraining(){
-        if(Integer.parseInt(tvCounter.getText().toString()) == 1)
-            return true;
-        return false;
-    }
-
-    public boolean phraseCompleted(){
-        return etPhrase.getText().toString().equalsIgnoreCase(textToWrite.getText().toString());
-    }
-
     private void showCustomSnackBar(String msg){
         Snackbar snack = Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG);
         View snackView = snack.getView();
-        snackView.setBackgroundColor(ContextCompat.getColor(TrainActivity.this, R.color.GREY));
+        snackView.setBackgroundColor(ContextCompat.getColor(JustTrainActivity.this, R.color.GREY));
         snack.show();
     }
 
-    private void decrementCounter(){
-        tvCounter.setText(String.valueOf(Integer.parseInt(tvCounter.getText().toString())-1));
-        YoYo.with(Techniques.Landing)
-                .duration(700)
-                .repeat(0)
-                .playOn(tvCounter);
-    }
-
-    private void resetAndCount() {
-        decrementCounter();
+    private void reset() {
         inicializarArray(keyPressArray);
         inicializarArray(keyAirArray);
         etPhrase.setText("");
+    }
+
+    private void inicializarArray(LetterItem[] keyPressArray) {
+        for(int j=0; j<41; j++){
+            keyPressArray[j] = new LetterItem();
+            keyPressArray[j].setLetter(hmap.get(j+29));
+        }
     }
 
     private void inicializarArray(LetterItem[][] keyAirArray) {
@@ -226,46 +173,28 @@ public class TrainActivity extends AppCompatActivity {
         }
     }
 
-    private void inicializarArray(LetterItem[] keyPressArray) {
-        for(int j=0; j<41; j++){
-            keyPressArray[j] = new LetterItem();
-            keyPressArray[j].setLetter(hmap.get(j+29));
-        }
-    }
-
-    private void setRandomPhrase(){
-        textToWrite = (TextView) findViewById(R.id.textToWrite);
-        Random rand = new Random();
-        int strRand = rand.nextInt(5) + 1;
-        Resources res = getResources();
-        String[] frases = res.getStringArray(R.array.frases);
-        textToWrite.setText(frases[strRand-1]);
-    }
-
-
-
     public KeyboardView.OnKeyboardActionListener keyboardActionListener = new KeyboardView.OnKeyboardActionListener() {
         @Override
         public void onPress(int primaryCode) {
             Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             v.vibrate(getResources().getInteger(R.integer.vibration_length));
 
-           if(this.checkNonLeterKeys(primaryCode, "onPress")){
-               //67 code for delete
-               return;
-           }
+            if(this.checkNonLeterKeys(primaryCode, "onPress")){
+                //67 code for delete
+                return;
+            }
 
-           dOneKeyPress = new Date();
-           if(primero != false) {
-               Date onpress = new Date();
-               tiempoDiferenciaEntreTeclas = onpress.getTime() - sueltoTecla;
-               Log.d("TestAire","TestAire: tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
-               alAire.add("tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
-               keyAirArray[primarykeyguardada-29][primaryCode-29].addValue(tiempoDiferenciaEntreTeclas);
-           }
-           else{
-               primero = true;
-           }
+            dOneKeyPress = new Date();
+            if(primero != false) {
+                Date onpress = new Date();
+                tiempoDiferenciaEntreTeclas = onpress.getTime() - sueltoTecla;
+                Log.d("TestAire","TestAire: tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+                alAire.add("tecla "+hmap.get(primarykeyguardada) +" "+hmap.get(primaryCode)+" -- "+ String.valueOf(tiempoDiferenciaEntreTeclas));
+                keyAirArray[primarykeyguardada-29][primaryCode-29].addValue(tiempoDiferenciaEntreTeclas);
+            }
+            else{
+                primero = true;
+            }
         }
 
         @Override
@@ -321,7 +250,7 @@ public class TrainActivity extends AppCompatActivity {
 //                if(trigger.equals("onRelease")){
 //
 //                }
-                    //deleteLastLetter();
+                //deleteLastLetter();
                 return true;
             }
             return false;
@@ -417,5 +346,4 @@ public class TrainActivity extends AppCompatActivity {
         hmap.put(56,".");
 //        hmap.put(67,"delete");
     }
-
 }

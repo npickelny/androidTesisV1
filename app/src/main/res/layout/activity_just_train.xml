@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_just_train"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    tools:context="com.example.nicolaspickelny.androidcustomkeyboard.Activities.JustTrainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etEmail"
+            android:textColorHint="@color/icons"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginStart="11dp"
+            android:theme="@style/TextLabel">
+
+            <EditText android:id="@+id/Email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Enter your Email"
+                android:textColorHint="@color/icons"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:id="@+id/editText"
+            android:textStyle="bold"
+            android:layout_below="@+id/tvCounter"
+            android:layout_centerHorizontal="true"/>
+
+        <TextView
+            android:id="@+id/textToWrite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textSize="17dp"
+            android:textColor="@color/icons"
+            android:textStyle="bold"
+            android:gravity="center_horizontal"
+            android:layout_gravity="bottom"/>
+
+        <Button
+            android:text="Entrenar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnReady" />
+
+    </LinearLayout>
+
+
+    <android.inputmethodservice.KeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_above="@+id/relativeAd"
+        android:layout_centerHorizontal="true"
+        android:focusable="true"
+        android:background="@color/background"
+        android:keyBackground="@color/background"
+        android:focusableInTouchMode="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

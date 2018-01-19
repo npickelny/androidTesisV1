@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private ServerInterface instance;
 
     private Button btnLogin;
+    private Button btnJustTrain;
     private TextView etSignUp;
     private ProgressDialog progressDialog = null;
 
@@ -53,6 +54,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(i);
+            }
+        });
+
+        btnJustTrain = (Button) findViewById(R.id.btnJustTrain);
+        btnJustTrain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(LoginActivity.this, JustTrainActivity.class);
                 startActivity(i);
             }
         });
@@ -98,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         loginStep2(email);
     }
 
-    public void loginStep2(String email){
+    public void loginStep2(final String email){
         final HashMap<String, String> params = new HashMap<>(2);
         params.put("email", email);
         Call<User> loginCall = RetrofitAPIService.getInstance().login(params);
@@ -110,10 +120,11 @@ public class LoginActivity extends AppCompatActivity {
                 User usr = response.body();
                 if (usr == null) {
                     showCustomSnackBar("No reconocimos el email");
+                    return;
                 }
 
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
-//                i.putExtra("userEmail", email);
+                i.putExtra("email", email);
                 startActivity(i);
             }
 

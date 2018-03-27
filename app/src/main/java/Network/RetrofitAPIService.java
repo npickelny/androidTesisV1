@@ -1,9 +1,11 @@
 package Network;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.example.nicolaspickelny.androidcustomkeyboard.R;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,7 +20,7 @@ public class RetrofitAPIService {
 
     public static ServerInterface getInstance() {
         if (instance == null) {
-
+            String serverUrl = getServerUrl();
             Gson gson = new GsonBuilder().create();
             retrofit = new Retrofit.Builder()
 //                    .baseUrl("http://192.168.0.14:3000")
@@ -32,6 +34,15 @@ public class RetrofitAPIService {
         }
         return instance;
 
+    }
+
+    private String getServerUrl() {
+        get
+        SharedPreferences sharedPref = this.getSharedPreferences(getString(R.string.shared_preferences_filename), Context.MODE_PRIVATE);
+        String defaultValue = "No Url Server";
+        String serverUrl = sharedPref.getString(getString(R.string.serverUrl), defaultValue);
+        x1.setHint(serverUrl);
+        return null;
     }
 
     public static boolean isNetworkAvailable(final Context context) {

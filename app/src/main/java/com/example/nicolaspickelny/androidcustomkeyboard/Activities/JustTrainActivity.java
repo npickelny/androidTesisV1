@@ -76,6 +76,7 @@ public class JustTrainActivity extends AppCompatActivity {
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
+        trainingData = new ArrayList<LetterItem[]>();
         this.setRandomPhrase();
         etEmail = (EditText) findViewById(R.id.Email);
         btnReady = (Button)findViewById(R.id.btnReady);

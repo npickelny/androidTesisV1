@@ -4,4 +4,6 @@
     <string name="simple_ime">Simple IME</string>
     <string name="subtype_en_US">English (US)</string>
     <integer name="vibration_length">20</integer>
+    <string name="serverUrl">serverUrl</string>
+    <string name="shared_preferences_filename">com.example.myapp.AndroidCustomKeyboardFileKey</string>
 </resources>

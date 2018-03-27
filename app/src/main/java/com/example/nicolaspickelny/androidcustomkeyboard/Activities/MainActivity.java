@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -171,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
         registerEditText(R.id.before_input);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
-
 
     private void inicializarArray(LetterItem[][] keyAirArray) {
         for(int i=0; i<41; i++){

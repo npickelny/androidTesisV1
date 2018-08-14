@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -60,6 +61,7 @@ public class JustTrainActivity extends AppCompatActivity {
 
     protected ArrayList<LetterItem[]> trainingData;
     private TextView textToWrite;
+    private EditText editTextToWrite;
     final Context context = this;
 
     private String email;
@@ -76,7 +78,15 @@ public class JustTrainActivity extends AppCompatActivity {
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
+        alTecla = new ArrayList<String>();
+        alAire = new ArrayList<String>();
+
         this.setRandomPhrase();
+        this.loadLetterTransformer();
+
+        inicializarArray(keyPressArray);
+        inicializarArray(keyAirArray);
+
         etEmail = (EditText) findViewById(R.id.Email);
         btnReady = (Button)findViewById(R.id.btnReady);
         btnReady.setOnClickListener(new View.OnClickListener() {
@@ -85,6 +95,10 @@ public class JustTrainActivity extends AppCompatActivity {
                 checkIfPhraseCompleted();
             }
         });
+
+        editTextToWrite = (EditText) findViewById(R.id.editTextToWrite);
+        registerEditText(editTextToWrite.getId());
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     private void setRandomPhrase(){

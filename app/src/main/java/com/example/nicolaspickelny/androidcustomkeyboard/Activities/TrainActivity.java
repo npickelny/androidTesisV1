@@ -92,20 +92,25 @@ public class TrainActivity extends AppCompatActivity {
         keyboardView.setKeyboard(keyboard);
         keyboardView.setOnKeyboardActionListener(keyboardActionListener);
 
-        etPhrase = (EditText) findViewById(R.id.editText);
-        registerEditText(etPhrase.getId());
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-
-        trainingData = new ArrayList<LetterItem[]>();
-
-        frasesArrayTest = new ArrayList<String>();
-
         alTecla = new ArrayList<String>();
         alAire = new ArrayList<String>();
+
+        this.setRandomPhrase();
+        this.loadLetterTransformer();
+
+        inicializarArray(keyPressArray);
+        inicializarArray(keyAirArray);
+
+        etPhrase = (EditText) findViewById(R.id.editText);
+        registerEditText(etPhrase.getId());
+
+        trainingData = new ArrayList<LetterItem[]>();
+        frasesArrayTest = new ArrayList<String>();
 
         tvCounter = (TextView) findViewById(R.id.tvCounter);
         intentos = (TextView) findViewById(R.id.intentos);
 
+        email = getIntent().getStringExtra("email");
         btnReady = (Button) findViewById(R.id.btnReady);
         btnReady.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,13 +118,6 @@ public class TrainActivity extends AppCompatActivity {
                 checkIfPhraseCompleted();
              }
         });
-
-        email = getIntent().getStringExtra("email");
-        this.setRandomPhrase();
-        this.loadLetterTransformer();
-
-        inicializarArray(keyPressArray);
-        inicializarArray(keyAirArray);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         setHeaderPhrasePluralized();

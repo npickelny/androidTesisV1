@@ -123,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
                     Intent i = new Intent(MainActivity.this, ShowArrays.class);
                     if(responseMsg.getMsg().equalsIgnoreCase("10")){ //TODO change code and set it in cofing file
-                        i.putExtra("name", "NICO HARCODED");
+                        i.putExtra("name", "Bienvenido Gabriel");
                     } else {
-                        i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
+                        i.putExtra("name", "Lo sentimos, tu información no pudo ser validada");
                     }
                     startActivity(i);
                 }

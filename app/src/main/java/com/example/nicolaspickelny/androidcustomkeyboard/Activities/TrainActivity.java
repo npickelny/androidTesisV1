@@ -170,7 +170,7 @@ public class TrainActivity extends AppCompatActivity {
                 if(responseMsg.getMsg() == "99"){ // si pasa esto es pq algo se cago zarpado
                     return;
                 } else {
-                    i.putExtra("name", "BUT WE COULDNT RECOGNIZE YOU");
+                    i.putExtra("name", "Neurona Entrenada!");
                 }
                 startActivity(i);
             }

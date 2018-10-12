@@ -81,8 +81,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void checkFieldsAndContinue() {
 
-        if(input_email.getText().toString().equals("") || input_lastName.getText().toString().equals("") || input_name.getText().toString().equals("")){
-           showCustomSnackBar("Hay Campos Vacios");
+        if (input_email.getText().toString().equals("") || input_lastName.getText().toString().equals("") || input_name.getText().toString().equals("")) {
+            showCustomSnackBar("Hay Campos Vacios");
         }
 
         final HashMap<String, String> params = new HashMap<>(2);
@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         Intent i = new Intent(getApplicationContext(), TrainActivity.class);
 
-        if(!checkBox.isChecked()){
+        if (!checkBox.isChecked()) {
             i.putExtra("email", input_email.getText().toString());
             startActivity(i);
         } else {
@@ -104,7 +104,7 @@ public class SignUpActivity extends AppCompatActivity {
                 public void onResponse(Call<ResponseMessage> call, Response<ResponseMessage> response) {
                     progressDialog.dismiss();
                     ResponseMessage aux = response.body();
-                    if(response.code() == 201){
+                    if (response.code() == 201) {
                         showCustomSnackBar(aux.getMsg());
                         return;
                     }
@@ -124,7 +124,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    private void showCustomSnackBar(String msg){
+    private void showCustomSnackBar(String msg) {
         Snackbar snack = Snackbar.make(findViewById(android.R.id.content), msg, Snackbar.LENGTH_LONG);
         View snackView = snack.getView();
         snackView.setBackgroundColor(ContextCompat.getColor(SignUpActivity.this, R.color.GREY));
